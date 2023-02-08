@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('handler ok');
   if (req.method === 'POST') {
     return getSubscriptionsFromDatabase()
-      .then((subscriptions) => {
+      .then((subscriptions: any) => {
         console.log('api console', subscriptions);
         let promiseChain: any = Promise.resolve();
 

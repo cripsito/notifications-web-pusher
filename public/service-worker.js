@@ -4,3 +4,4 @@ const notification = new Notification('To do list', {
   body: text,
   icon: img,
 });
+const sw = 2;

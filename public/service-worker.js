@@ -23,7 +23,7 @@ const saveSubscription = async (subscription) => {
   });
   return response.json();
 };
-self.addEventListener('activate', async () => {
+self.addEventListener('activate', async () => { 
   // This will be called only once when the service worker is installed for first time.
   try {
     const applicationServerKey = urlB64ToUint8Array(

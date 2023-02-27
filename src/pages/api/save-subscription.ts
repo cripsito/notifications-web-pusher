@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../lib/sqlite';
+import { newSubscription } from '../../lib/firestoredb';
 const isValidSaveRequest = (req: any, res: any) => {
   // Check the request body has at least an endpoint.
   if (!req.body || !req.body.endpoint) {
@@ -22,16 +23,16 @@ const isValidSaveRequest = (req: any, res: any) => {
 
 function saveSubscriptionToDatabase(subscription: any) {
   console.log('received susb', subscription);
-  return new Promise(function (resolve, reject) {
-    db.saveSubscription(JSON.stringify(subscription), function (err: any) {
+  return newSubscription(JSON.stringify(subscription));
+  /* db.saveSubscription(JSON.stringify(subscription), function (err: any) {
       if (err) {
         reject(err);
         return;
       }
 
       resolve(subscription);
-    });
-  });
+    }); */
+  /*  }); */
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

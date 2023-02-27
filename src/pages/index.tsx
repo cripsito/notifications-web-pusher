@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { generateVAPID } from '../lib/getVAPIDkeys';
 import dynamic from 'next/dynamic';
 import db from '../lib/sqlite';
+import { getSubscripbers } from '../lib/firestoredb';
 
 const SubscriberPage = dynamic(() => import('../components/subscriberPage'), {
   ssr: false,
@@ -22,7 +23,7 @@ export default function Home({
 }
 export async function getServerSideProps(context: any) {
   const vapidKeys: any = generateVAPID();
-  const dbres = await db.getOptions();
+  const dbres = await getSubscripbers();
 
   console.log(dbres);
 

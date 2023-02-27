@@ -1,11 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../lib/sqlite';
+import { getSubscripbers } from '../../lib/firestoredb';
+
 import webpush from 'web-push';
 
 function getSubscriptionsFromDatabase() {
   return new Promise(async function (resolve, reject) {
-    resolve(await db.getOptions());
+    resolve(await getSubscripbers);
   });
 }
 

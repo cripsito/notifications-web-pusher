@@ -48,7 +48,7 @@ export default function SubscriberPage({
       const pushsubs = JSON.parse(JSON.stringify(pushSubscriptionObj));
       console.log('here', pushsubs);
       const subscriptionObject = {
-        endpoint: 'localhost:3000/',
+        endpoint: pushsubs.endpoint,
         keys: {
           p256dh: pushsubs.keys.p256dh,
           auth: pushsubs.keys.auth,
@@ -59,16 +59,10 @@ export default function SubscriberPage({
   }, [pushSubscriptionObj]);
 
   const validBrow = () => {
-    if (!('serviceWorker' in navigator)) {
-      // Service Worker isn't supported on this browser, disable or hide UI.
-      return false;
-    }
-
-    if (!('PushManager' in window)) {
-      // Push isn't supported on this browser, disable or hide UI.
-      return false;
-    }
-    return true;
+    return {
+      serviceWorkerSupported: 'serviceWorker' in navigator,
+      pushManagerSupported: 'PushManager' in window,
+    };
   };
 
   const subscribeUserToPush = useCallback(() => {
@@ -77,7 +71,7 @@ export default function SubscriberPage({
       .then(function (registration) {
         const subscribeOptions = {
           userVisibleOnly: true,
-          applicationServerKey: convert(privateKey),
+          applicationServerKey: convert(publicKey),
         };
 
         const currentSubs = registration.pushManager.getSubscription();
@@ -98,7 +92,7 @@ export default function SubscriberPage({
       .catch((e) => {
         console.log(e);
       });
-  }, [privateKey]);
+  }, [publicKey]);
 
   const askNotificationPermission = useCallback(() => {
     return new Promise(function (resolve, reject) {

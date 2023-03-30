@@ -1,25 +1,16 @@
-self.addEventListener('install', function (event) {
-  self.registration.showNotification('Bienvenido', {
-    body: 'Gracias por permitirnos enviar notificaciones.',
-    icon: '/path/to/icon.png',
-  });
-  event.waitUntil(self.skipWaiting());
-});
+self.addEventListener('push', (event) => {
+  const data = event.data.json();
 
-self.addEventListener('activate', function (event) {
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener('push', function (event) {
-  const title = 'Título de la notificación';
+  const title = data.title || 'Default Title';
   const options = {
-    body: 'Este es el cuerpo de la notificación',
-    icon: './vercel.svg',
+    body: data.body || 'Default Message',
+    icon: data.icon || '/default-icon.png',
+    badge: data.badge || '/default-badge.png',
   };
+
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function (event) {
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(self.clients.openWindow('https://ejemplo.com'));
 });

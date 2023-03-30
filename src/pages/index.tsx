@@ -31,6 +31,6 @@ export async function getServerSideProps(context: any) {
   console.log(vapidKeys.publicKey, vapidKeys.privateKey);
 
   return {
-    props: { publickey: vapidKeys.publicKey, privateKey: vapidKeys.privateKey }, // will be passed to the page component as props
+    props: { publicKey: vapidKeys.publicKey, privateKey: vapidKeys.privateKey },
   };
 }

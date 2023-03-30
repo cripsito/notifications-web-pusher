@@ -1,92 +1,46 @@
-'use client';
+// pages/subscriber.js
 
-import convert from 'convert-vapid-public-key';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export default function SubscriberPage({
-  publicKey,
-  privateKey,
-}: {
-  publicKey: any;
-  privateKey: any;
-}) {
+function SubscriberPage({ publicKey }: any) {
   const [pushSubscriptionObj, setPushSubscriptionObj] =
     useState<any>(undefined);
+
   function sendSubscriptionToBackEnd(subscription: any) {
-    return fetch('/api/save-subscription/', {
+    return fetch('/api/save-subscription', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(subscription),
     })
-      .then(function (response) {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Bad status code from server.');
         }
 
         return response.json();
       })
-      .then(function (responseData) {
+      .then((responseData) => {
         if (!(responseData.data && responseData.data.success)) {
           throw new Error('Bad response from server.');
         }
       });
   }
 
-  const createNotif = () => {
-    const img = 'https://random.imagecdn.app/500/150';
-    const text = `HEY! Your task  is now overdue.`;
-    const notification = new Notification('To do list', {
-      body: text,
-      icon: img,
-    });
-  };
-
-  useEffect(() => {
-    if (pushSubscriptionObj != undefined) {
-      const pushsubs = JSON.parse(JSON.stringify(pushSubscriptionObj));
-      console.log('here', pushsubs);
-      const subscriptionObject = {
-        endpoint: pushsubs.endpoint,
-        keys: {
-          p256dh: pushsubs.keys.p256dh,
-          auth: pushsubs.keys.auth,
-        },
-      };
-      sendSubscriptionToBackEnd(subscriptionObject);
-    }
-  }, [pushSubscriptionObj]);
-
-  const validBrow = () => {
-    return {
-      serviceWorkerSupported: 'serviceWorker' in navigator,
-      pushManagerSupported: 'PushManager' in window,
-    };
-  };
-
   const subscribeUserToPush = useCallback(() => {
     return navigator.serviceWorker
       .register('/service-worker.js')
-      .then(function (registration) {
+      .then((registration) => {
         const subscribeOptions = {
           userVisibleOnly: true,
-          applicationServerKey: convert(publicKey),
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
         };
-
-        const currentSubs = registration.pushManager.getSubscription();
-        if (currentSubs) {
-          return currentSubs;
-        }
 
         return registration.pushManager.subscribe(subscribeOptions);
       })
-      .then(function (pushSubscription) {
+      .then((pushSubscription) => {
         setPushSubscriptionObj(pushSubscription);
-        console.log(
-          'Received PushSubscription: ',
-          JSON.stringify(pushSubscription)
-        );
         return pushSubscription;
       })
       .catch((e) => {
@@ -99,35 +53,57 @@ export default function SubscriberPage({
       const permissionResult = Notification.requestPermission(function (
         result
       ) {
-        subscribeUserToPush();
-
         resolve(result);
       });
 
       if (permissionResult) {
         permissionResult.then(resolve, reject);
       }
-    }).then(function (permissionResult) {
-      if (permissionResult !== 'granted') {
-        throw new Error("We weren't granted permission.");
-      }
-    });
+    })
+      .then((permissionResult) => {
+        if (permissionResult !== 'granted') {
+          throw new Error("We weren't granted permission.");
+        }
+        return subscribeUserToPush();
+      })
+      .catch((error) => {
+        console.error('Failed to subscribe user:', error);
+      });
   }, [subscribeUserToPush]);
 
+  useEffect(() => {
+    if (pushSubscriptionObj !== undefined) {
+      const pushsubs = JSON.parse(JSON.stringify(pushSubscriptionObj));
+      const subscriptionObject = {
+        endpoint: pushsubs.endpoint,
+        keys: {
+          p256dh: pushsubs.keys.p256dh,
+          auth: pushsubs.keys.auth,
+        },
+      };
+      sendSubscriptionToBackEnd(subscriptionObject);
+    }
+  }, [pushSubscriptionObj]);
+
   return (
-    <>
-      {validBrow() ? (
-        <div>
-          <button id="enable" onClick={askNotificationPermission}>
-            Enable notifications
-          </button>
-          <button id="enable" onClick={createNotif}>
-            Create notifications
-          </button>
-        </div>
-      ) : (
-        'not valid brow'
-      )}
-    </>
+    <div>
+      <button id="enable" onClick={askNotificationPermission}>
+        Enable notifications
+      </button>
+    </div>
   );
 }
+
+function urlBase64ToUint8Array(base64String: any) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+export default SubscriberPage;

@@ -24,15 +24,6 @@ const isValidSaveRequest = (req: any, res: any) => {
 function saveSubscriptionToDatabase(subscription: any) {
   console.log('received susb', subscription);
   return newSubscription(JSON.stringify(subscription));
-  /* db.saveSubscription(JSON.stringify(subscription), function (err: any) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(subscription);
-    }); */
-  /*  }); */
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

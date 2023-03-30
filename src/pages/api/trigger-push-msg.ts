@@ -8,7 +8,9 @@ const vapidKeys = {
     'BMoGEW_YnvTdd7znphsBuYsPXptJnsEhrPzX4541LLxHil81MazwMYdTl9jG83v-b4qSw-n8Zm5fGRr-SNuLNiA',
   privateKey: 'dlIfgFoHAf1QBp9Fjwhalrf84oeisWRVNNFNcRXYNnk',
 };
-
+webpush.setGCMAPIKey(
+  'BL4L7qVQtdrPw3PJlAmCz9VB37lSjsP7_kXHzaWRTdfzuxvkA5E0R_vp2cx6wEm6f8QSd8aDe--uOjFyZCTtbh0'
+);
 webpush.setVapidDetails(
   'mailto:cripsito@gmail.com',
   vapidKeys.publicKey,

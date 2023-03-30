@@ -23,7 +23,7 @@ function getSubscriptionsFromDatabase() {
 
 const triggerPushMsg = function (subscription: any, dataToSend: any) {
   return webpush.sendNotification(subscription, dataToSend).catch((err) => {
-    console.log('error in webpush', err);
+    console.log('Error in webpush:', err, JSON.stringify(err));
     if (err.statusCode === 404 || err.statusCode === 410) {
       console.log('Subscription has expired or is no longer valid: ', err);
       //return deleteSubscriptionFromDatabase(subscription._id);

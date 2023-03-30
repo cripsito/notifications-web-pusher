@@ -1,13 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../lib/sqlite';
 import { getSubscripbers } from '../../lib/firestoredb';
-
 import webpush from 'web-push';
+
+const vapidKeys = {
+  publicKey:
+    'BMoGEW_YnvTdd7znphsBuYsPXptJnsEhrPzX4541LLxHil81MazwMYdTl9jG83v-b4qSw-n8Zm5fGRr-SNuLNiA',
+  privateKey: 'dlIfgFoHAf1QBp9Fjwhalrf84oeisWRVNNFNcRXYNnk',
+};
+
+webpush.setVapidDetails(
+  'mailto:example@yourdomain.org',
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
 
 function getSubscriptionsFromDatabase() {
   return new Promise(async function (resolve, reject) {
-    resolve(await getSubscripbers);
+    resolve(await getSubscripbers());
   });
 }
 
@@ -31,10 +41,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         console.log('api console', subscriptions);
         let promiseChain: any = Promise.resolve();
 
+        const payload = JSON.stringify({
+          title: 'New notification',
+          body: 'This is a test push notification',
+        });
+
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = subscriptions[i];
           promiseChain = promiseChain.then(() => {
-            return triggerPushMsg(JSON.parse(subscription.data), 'dataToSend');
+            return triggerPushMsg(JSON.parse(subscription.data), payload);
           });
         }
 

@@ -1,6 +1,5 @@
-// pages/subscriber.js
-
 import { useCallback, useEffect, useState } from 'react';
+import convert from 'convert-vapid-public-key';
 
 function SubscriberPage({ publicKey }: any) {
   const [pushSubscriptionObj, setPushSubscriptionObj] =
@@ -34,7 +33,7 @@ function SubscriberPage({ publicKey }: any) {
       .then((registration) => {
         const subscribeOptions = {
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(publicKey),
+          applicationServerKey: convert(publicKey),
         };
 
         return registration.pushManager.subscribe(subscribeOptions);

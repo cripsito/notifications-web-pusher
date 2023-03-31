@@ -32,8 +32,9 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      publicKey: vapidKeys.publicKey,
-      privateKey: 'dlIfgFoHAf1QBp9Fjwhalrf84oeisWRVNNFNcRXYNnk',
+      publicKey:
+        'BMoGEW_YnvTdd7znphsBuYsPXptJnsEhrPzX4541LLxHil81MazwMYdTl9jG83v',
+      privateKey: 'test',
     },
   };
 }

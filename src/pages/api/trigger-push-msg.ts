@@ -11,6 +11,7 @@ const vapidKeys = {
 webpush.setGCMAPIKey(
   'BL4L7qVQtdrPw3PJlAmCz9VB37lSjsP7_kXHzaWRTdfzuxvkA5E0R_vp2cx6wEm6f8QSd8aDe--uOjFyZCTtbh0'
 );
+
 webpush.setVapidDetails(
   'mailto:cripsito@gmail.com',
   vapidKeys.publicKey,

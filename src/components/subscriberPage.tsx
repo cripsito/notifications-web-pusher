@@ -31,9 +31,10 @@ function SubscriberPage({ publicKey }: any) {
     return navigator.serviceWorker
       .register('/service-worker.js')
       .then((registration) => {
+        console.log('publicKey', publicKey);
         const subscribeOptions = {
           userVisibleOnly: true,
-          applicationServerKey: convert(publicKey),
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
         };
 
         return registration.pushManager.subscribe(subscribeOptions);

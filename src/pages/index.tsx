@@ -33,7 +33,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       publicKey:
-        'BMoGEW_YnvTdd7znphsBuYsPXptJnsEhrPzX4541LLxHil81MazwMYdTl9jG83v',
+        'BMoGEW_YnvTdd7znphsBuYsPXptJnsEhrPzX4541LLxHil81MazwMYdTl9jG83v-b4qSw-n8Zm5fGRr-SNuLNiA',
       privateKey: 'test',
     },
   };
